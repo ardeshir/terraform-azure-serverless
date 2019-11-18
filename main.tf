@@ -1,12 +1,9 @@
-module "serverless" {
-   source = "ardeshir/serverless/azure"
+data "archive_file" "code_package" {
+  type        = "zip"
+  source_dir  = "${path.module}"
+  output_path = "${path.module}/serverless.zip"
 }
-      
-resource "azurerm_storage_blob" "storage_blob" {
-   name  = "serverless.zip"
-   resource_group_name    = azurerm_resource_group.default.name
-   storage_account_name   = azurerm_storage_account.storage_account.name
-   storage_container_name = azurerm_storage_container.storage_container.name
-   type                   = "block"
-   source                 = module.serverless.output_path
+
+output "output_path" {
+    value = data.archive_file.code_package.output_path
 }
